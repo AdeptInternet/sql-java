@@ -26,6 +26,8 @@ import java.util.function.Predicate;
  * This is a <a href="package-summary.html">functional interface</a>
  * whose functional method is {@link #test(Object)}.
  *
+ * Copied from java.util.function.Predicate
+ *
  * @param <T> the type of the input to the predicate
  *
  * @since 1.8
