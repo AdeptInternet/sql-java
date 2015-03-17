@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  *
@@ -37,6 +38,10 @@ public class FunctionalSql {
 
     private java.sql.Connection con() throws SQLException, SQLDataAccessException {
         return conProducer.get();
+    }
+
+    public <T> Stream<ResultSet> stream(final SQLSupplier<? extends java.sql.ResultSet> resultSetSupplier) throws SQLException, SQLDataAccessException {
+        return stream(resultSetSupplier, SQLFunction.identity());
     }
 
     public <T> java.util.stream.Stream<T> stream(final SQLSupplier<? extends java.sql.ResultSet> resultSetSupplier, SQLFunction<java.sql.ResultSet, T> rowFunction) throws SQLException, SQLDataAccessException {

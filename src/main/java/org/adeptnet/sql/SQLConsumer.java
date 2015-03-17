@@ -15,7 +15,9 @@
  */
 package org.adeptnet.sql;
 
+import java.sql.SQLException;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * Represents an operation that accepts a single input argument and returns no
@@ -62,7 +64,23 @@ public interface SQLConsumer<T> {
             accept(t);
             after.accept(t);
         };
+    }
 
+    /**
+     *
+     * @param <T> the type of arguments to the consumer
+     * @param sqlConsumer SQLConsumer that will be wrapped
+     * @return Consumer with possible SQLDataAccessException when SQLException
+     * thrown by the SQLConsumer
+     */
+    static <T> Consumer<T> checked(SQLConsumer<T> sqlConsumer) {
+        return (T t) -> {
+            try {
+                sqlConsumer.accept(t);
+            } catch (SQLException ex) {
+                throw new SQLDataAccessException(ex.getMessage(), ex);
+            }
+        };
     }
 
 }

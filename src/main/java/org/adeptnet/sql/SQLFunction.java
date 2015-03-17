@@ -15,7 +15,9 @@
  */
 package org.adeptnet.sql;
 
+import java.sql.SQLException;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * Represents a function that accepts one argument and produces a result.
@@ -95,4 +97,21 @@ public interface SQLFunction<T, R> {
         return t -> t;
     }
 
+    /**
+     *
+     * @param <A> the type of the input and output objects to the function
+     * @param <T> the type of the result of the function
+     * @param sqlFunction SQLFunction that will be wrapped
+     * @return Function with possible SQLDataAccessException when SQLException
+     * thrown by the SQLFunction
+     */
+    static <A, T> Function<A, T> checked(SQLFunction<A, T> sqlFunction) {
+        return (A a) -> {
+            try {
+                return sqlFunction.apply(a);
+            } catch (SQLException ex) {
+                throw new SQLDataAccessException(ex.getMessage(), ex);
+            }
+        };
+    }
 }

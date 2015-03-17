@@ -15,6 +15,9 @@
  */
 package org.adeptnet.sql;
 
+import java.sql.SQLException;
+import java.util.function.Supplier;
+
 /**
  * Represents a supplier of results.
  *
@@ -25,7 +28,7 @@ package org.adeptnet.sql;
  * <p>
  * This is a <a href="package-summary.html">functional interface</a>
  * whose functional method is {@link #get()}.
- * 
+ *
  * Copied from java.util.function.Supplier
  *
  * @author Francois Steyn - Adept Internet (PTY) LTD (francois.s@adept.co.za)
@@ -33,7 +36,7 @@ package org.adeptnet.sql;
  */
 @FunctionalInterface
 public interface SQLSupplier<T> {
-    
+
     /**
      * Gets a result.
      *
@@ -43,5 +46,22 @@ public interface SQLSupplier<T> {
      * SQLDataAccessException
      */
     T get() throws java.sql.SQLException, SQLDataAccessException;
+
+    /**
+     *
+     * @param <T> the type of result of the supplier
+     * @param sqlSupplier SQLSupplier that will be wrapped
+     * @return Supplier with possible SQLDataAccessException when SQLException
+     * thrown by the SQLSupplier
+     */
+    static <T> Supplier<T> checked(SQLSupplier<T> sqlSupplier) {
+        return () -> {
+            try {
+                return sqlSupplier.get();
+            } catch (SQLException ex) {
+                throw new SQLDataAccessException(ex.getMessage(), ex);
+            }
+        };
+    }
 
 }
