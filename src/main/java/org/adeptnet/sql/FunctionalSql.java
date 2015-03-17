@@ -27,6 +27,8 @@ import java.util.logging.Logger;
  */
 public class FunctionalSql {
 
+    private static final Logger LOG = Logger.getLogger(FunctionalSql.class.getName());
+
     final SQLSupplier<java.sql.Connection> conProducer;
 
     public FunctionalSql(final SQLSupplier<java.sql.Connection> conProducer) {
@@ -46,7 +48,7 @@ public class FunctionalSql {
                     try {
                         iterator.close();
                     } catch (Exception ex) {
-                        Logger.getLogger(FunctionalSql.class.getName()).log(Level.SEVERE, null, ex);
+                        LOG.log(Level.SEVERE, ex.getMessage(), ex);
                     }
                 });
     }
@@ -158,7 +160,7 @@ public class FunctionalSql {
             try {
                 resource.close();
             } catch (Exception ex) {
-                Logger.getLogger(FunctionalSql.class.getName()).log(Level.SEVERE, null, ex);
+                LOG.log(Level.SEVERE, ex.getMessage(), ex);
             }
         }
     }
@@ -177,7 +179,7 @@ public class FunctionalSql {
         try {
             closables.addAll(getClosableResources(rs.getStatement()));
         } catch (Exception ex) {
-            Logger.getLogger(FunctionalSql.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, ex.getMessage(), ex);
         }
         return closables;
     }
@@ -190,7 +192,7 @@ public class FunctionalSql {
                 closables.add(stmt.getConnection());
             }
         } catch (Exception ex) {
-            Logger.getLogger(FunctionalSql.class.getName()).log(Level.SEVERE, null, ex);
+            LOG.log(Level.SEVERE, ex.getMessage(), ex);
         }
 
         return closables;
