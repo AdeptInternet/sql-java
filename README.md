@@ -63,7 +63,7 @@ public class SomeClass {
     /*
     the real FUN
     */
-    public List<User> simepleListUsers() throws SQLDataAccessException, SQLException {
+    public List<User> simpleListUsers() throws SQLDataAccessException, SQLException {
         final String sqlString = "SELECT `user`.`User` userUser, `user`.`Host` userHost, `db`.* FROM `user` LEFT OUTER JOIN `db` ON `user`.`User` = `db`.`User` AND `user`.`Host` = `db`.`Host`";
 
         //Autoclosure of Streams incase of exceptions during operation
