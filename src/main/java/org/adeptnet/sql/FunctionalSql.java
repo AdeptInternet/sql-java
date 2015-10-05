@@ -274,14 +274,26 @@ public class FunctionalSql {
             final java.sql.Connection con = con();
             closables.add(con);
             try {
-                final java.sql.Statement stmt = new NamedParameterStatement(con, sql).setAll(params).getPreparedStatement();
+                final java.sql.PreparedStatement stmt = new NamedParameterStatement(con, sql).setAll(params).getPreparedStatement();
                 closables.add(stmt);
-                return stmt.executeQuery(sql);
+                return stmt.executeQuery();
             } catch (java.sql.SQLException ex) {
                 closeResources(closables);
                 throw ex;
             }
         };
+    }
+
+    /**
+     *
+     * @param sql SQL Statement to be executed
+     * @param params Map with Named Parameters
+     * @return SQLSupplier for ResultSet
+     */
+    public int namedParamerterUpdate(final String sql, final java.util.Map<String, Object> params) throws SQLDataAccessException, SQLException {
+        try (final java.sql.Connection con = con(); final java.sql.PreparedStatement stmt = new NamedParameterStatement(con, sql).setAll(params).getPreparedStatement()) {
+            return stmt.executeUpdate();
+        }
     }
 
     /**

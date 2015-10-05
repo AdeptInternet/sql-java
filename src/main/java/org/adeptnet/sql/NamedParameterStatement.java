@@ -53,7 +53,7 @@ public class NamedParameterStatement implements java.lang.AutoCloseable {
 
     public NamedParameterStatement(final java.sql.Connection conn, final String statementWithNames) throws java.sql.SQLException {
 
-        final Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]*)(?!')");
+        final Pattern findParametersPattern = Pattern.compile("(?<!')(:[\\w]+)(?!')");
         final Matcher matcher = findParametersPattern.matcher(statementWithNames);
         int pos = 1;
         final StringBuffer sb = new StringBuffer(statementWithNames.length());
@@ -73,7 +73,11 @@ public class NamedParameterStatement implements java.lang.AutoCloseable {
     }
 
     public NamedParameterStatement setAll(java.util.Map<String, ?> params) throws SQLException {
+        clearParameters();
         for (java.util.Map.Entry<String, ?> entry : params.entrySet()) {
+            if (!fields.containsKey(entry.getKey())) {
+                continue;
+            }
             setObject(entry.getKey(), entry.getValue());
         }
         return this;
