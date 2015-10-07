@@ -327,6 +327,9 @@ public class FunctionalSql {
      * @param closables List of AutoClosables
      */
     static void closeResources(final java.util.List<java.lang.AutoCloseable> closables) {
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("closeResources");
+        }
         for (java.lang.AutoCloseable resource : closables) {
             try {
                 resource.close();
@@ -341,6 +344,9 @@ public class FunctionalSql {
      * @param stmt Statement to AutoClose
      */
     static void closeResources(final java.sql.Statement stmt) {
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("closeResources stmt");
+        }
         closeResources(getClosableResources(stmt));
     }
 
@@ -349,6 +355,9 @@ public class FunctionalSql {
      * @param ResultSet to AutoClose
      */
     static void closeResources(final java.sql.ResultSet rs) {
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("closeResources rs");
+        }
         closeResources(getClosableResources(rs));
     }
 
@@ -358,7 +367,13 @@ public class FunctionalSql {
      * @return List of AutoClosables
      */
     static java.util.List<java.lang.AutoCloseable> getClosableResources(final java.sql.ResultSet rs) {
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("getClosableResources rs");
+        }
         final java.util.List<java.lang.AutoCloseable> closables = new java.util.ArrayList<>(3);
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer(String.format("getClosableResources rs %s", rs));
+        }
         closables.add(rs);
         try {
             closables.addAll(getClosableResources(rs.getStatement()));
@@ -374,9 +389,15 @@ public class FunctionalSql {
      * @return List of AutoClosables
      */
     static java.util.List<java.lang.AutoCloseable> getClosableResources(final java.sql.Statement stmt) {
+        if (LOG.isLoggable(Level.FINER)) {
+            LOG.finer("getClosableResources stmt");
+        }
         final java.util.List<java.lang.AutoCloseable> closables = new java.util.ArrayList<>(2);
         try {
             if (stmt != null) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.finer(String.format("getClosableResources stmt %s - %s", stmt, stmt.getConnection()));
+                }
                 closables.add(stmt);
                 closables.add(stmt.getConnection());
             }

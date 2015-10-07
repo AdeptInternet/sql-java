@@ -15,12 +15,17 @@
  */
 package org.adeptnet.sql;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Francois Steyn - Adept Internet (PTY) LTD (francois.s@adept.co.za)
  * @param <T> Result Type of applying row function on ResultSet
  */
 public class SQLResultSetIterator<T> implements java.util.Iterator<T> {
+
+    private static final Logger LOG = Logger.getLogger(SQLResultSetIterator.class.getName());
 
     private final SQLFunction<java.sql.ResultSet, T> rowFunction;
     private final java.sql.ResultSet rs;
@@ -77,6 +82,9 @@ public class SQLResultSetIterator<T> implements java.util.Iterator<T> {
 
     public void close() {
         if (rs != null) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.finer("Closing rs");
+            }
             FunctionalSql.closeResources(rs);
         }
     }
