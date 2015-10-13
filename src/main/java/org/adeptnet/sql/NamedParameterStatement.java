@@ -59,7 +59,9 @@ public class NamedParameterStatement implements java.lang.AutoCloseable {
         final StringBuffer sb = new StringBuffer(statementWithNames.length());
         while (matcher.find()) {
             String name = matcher.group().substring(1);
-            LOGGER.log(Level.INFO, "Adding {0} to name {1}", new Object[]{pos, name});
+            if (LOGGER.isLoggable(Level.FINE)) {
+                LOGGER.log(Level.FINE, "Adding {0} to name {1}", new Object[]{pos, name});
+            }
             if (!fields.containsKey(name)) {
                 fields.put(name, new java.util.LinkedList<>());
             }
@@ -68,7 +70,9 @@ public class NamedParameterStatement implements java.lang.AutoCloseable {
             pos++;
         }
         matcher.appendTail(sb);
-        LOGGER.log(Level.INFO, "Final Parameter mappings {0}", new Object[]{fields.toString()});
+        if (LOGGER.isLoggable(Level.FINE)) {
+            LOGGER.log(Level.FINE, "Final Parameter mappings {0}", new Object[]{fields.toString()});
+        }
         prepStmt = conn.prepareStatement(sb.toString(), ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY, ResultSet.CLOSE_CURSORS_AT_COMMIT);
     }
 
