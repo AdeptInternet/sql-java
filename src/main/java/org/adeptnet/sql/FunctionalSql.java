@@ -267,6 +267,28 @@ public class FunctionalSql {
      * @param sql SQL Statement to be executed
      * @param params Map with Named Parameters
      * @return SQLSupplier for ResultSet
+     * @throws java.sql.SQLException if underlying operation throws SQLException
+     */
+    public boolean namedParamerterExecute(final String sql, final java.util.Map<String, Object> params) throws SQLException {
+        final java.util.List<java.lang.AutoCloseable> closables = new java.util.ArrayList<>(3);
+        try (final java.sql.Connection con = con()) {
+            closables.add(con);
+            try {
+                final java.sql.PreparedStatement stmt = new NamedParameterStatement(con, sql).setAll(params).getPreparedStatement();
+                closables.add(stmt);
+                return stmt.execute();
+            } catch (java.sql.SQLException ex) {
+                closeResources(closables);
+                throw ex;
+            }
+        }
+    }
+
+    /**
+     *
+     * @param sql SQL Statement to be executed
+     * @param params Map with Named Parameters
+     * @return SQLSupplier for ResultSet
      */
     public SQLSupplier<? extends java.sql.ResultSet> namedParamerterQuery(final String sql, final java.util.Map<String, Object> params) {
         return () -> {
